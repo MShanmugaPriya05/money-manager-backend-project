@@ -1,0 +1,17 @@
+Frontend GitHub Repo:
+https://github.com/MShanmugaPriya05/money-manager-frontend
+
+Backend GitHub Repo:
+https://github.com/MShanmugaPriya05/money-manager-backend
+
+Frontend Last Commit Hash:
+add later
+
+Backend Last Commit Hash:
+add later
+
+Frontend Deployment URL:
+Not deployed
+
+Backend Deployment URL:
+Not deployed
