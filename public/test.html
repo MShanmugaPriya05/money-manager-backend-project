@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>API Test</title>
+</head>
+<body>
+<h1>MONEY MANAGEMENT SYSTEM</h1>
+<h2>POST API Test</h2>
+<input type="number" id="amount" placeholder="Enter amount" />
+<input type="text" id="description" placeholder="Description">
+<br><br>
+<button onclick="addIncome()">Add Income</button>
+<button onclick="addExpense()">Add Expense</button>
+<button onclick="getTransactions()">view Transactions</button>
+<button onclick="getBalance()">View Balance</button>
+<button onclick="resetData()">Reset All</button>
+<div id="result"></div>
+
+<div id="transactions"></div>
+<h3>Transaction List</h3>
+<table border="1">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Amount</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+</table>
+ <table border="1" cellpadding="8" style="margin-top:20px;">
+  
+    
+
+  <tbody id="transactionsTable">
+  </tbody>
+</table>
+<p id="result">No action yet</p>
+<script>
+function addIncome() {
+  const amount = document.getElementById("amount").value;
+  const description = document.getElementById("description").value;
+
+  fetch("http://localhost:5000/income", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      amount: amount,
+      description: description
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("result").innerText = data.message;
+  })
+  .catch(err => console.error(err));
+}
+
+function addExpense() {
+  const amount = document.getElementById("amount").value;
+  const description = document.getElementById("description").value;
+
+  fetch("http://localhost:5000/expense", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      amount: amount,
+      description: description
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("result").innerText = data.message;
+  })
+  .catch(err => console.error(err));
+}
+
+function getTransactions() {
+  fetch("http://localhost:5000/transactions")
+    .then(res => res.json())
+    .then(data => {
+      const table = document.getElementById("transactions");
+      table.innerHTML = "";
+
+      data.income.forEach(item => {
+        const row = `
+          <tr>
+            <td>Income</td>
+            <td>${item.amount}</td>
+            <td>${item.description}</td>
+          </tr>
+        `;
+        table.innerHTML += row;
+      });
+
+      data.expense.forEach(item => {
+        const row = `
+          <tr>
+            <td>Expense</td>
+            <td>${item.amount}</td>
+            <td>${item.description}</td>
+          </tr>
+        `;
+        table.innerHTML += row;
+      });
+    })
+    .catch(err => {
+      alert("Error fetching transactions");
+      console.error(err);
+    });
+}
+
+
+function getBalance() {
+  fetch("http://localhost:5000/balance")
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("result").innerText =
+        "Total Income: " + data.totalIncome +
+        "\nTotal Expense: " + data.totalExpense +
+        "\nBalance: " + data.balance;
+    })
+    .catch(err => console.error(err));
+}
+function resetData() {
+  fetch("http://localhost:5000/reset", {
+    method: "POST"
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("result").innerText = data.message;
+  })
+  .catch(err => console.error(err));
+}
+function viewBalance() {
+  fetch("http://localhost:5000/balance")
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("result").innerHTML = `
+        <p>Total Income: ${data.totalIncome}</p>
+        <p>Total Expense: ${data.totalExpense}</p>
+        <p><b>Balance: ${data.balance}</b></p>
+      `;
+    })
+    .catch(err => console.error(err));
+}
+
+function getTransactions() {
+  fetch("http://localhost:5000/transactions")
+    .then(res => res.json())
+    .then(data => {
+      const table = document.getElementById("transactionsTable");
+      table.innerHTML = "";
+
+      data.income.forEach(item => {
+        table.innerHTML += `
+          <tr>
+            <td>Income</td>
+            <td>${item.amount}</td>
+            <td>${item.description}</td>
+          </tr>
+        `;
+      });
+
+      data.expense.forEach(item => {
+        table.innerHTML += `
+          <tr>
+            <td>Expense</td>
+            <td>${item.amount}</td>
+            <td>${item.description}</td>
+          </tr>
+        `;
+      });
+    })
+    .catch(err => {
+      alert("Error fetching transactions");
+      console.error(err);
+    });
+}
+
+</script>
+</body>
+</html>
+
